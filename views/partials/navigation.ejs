@@ -1,0 +1,32 @@
+<% function dive(node) {
+    Object.keys(node.pages).forEach((key) => {
+        let child = node.pages[key];
+        console.log(key);
+        console.log(child);
+        let currentPage = (whoami == key) ? 'selected' : '';
+        if (typeof(child.num) != 'number') return;
+        if (child.name == siteMap.top.name) { %> 
+            <div class="<%= currentPage %>">
+                <a href="/"><%= child.name %></a>
+            </div> <%
+        }
+        else if (child.type == 'external') {
+            %> <a href="<%= child.hier %>" target="_blank" rel="noopener noreferrer"><%= child.name %>&#8599;</a> <%
+        }
+        else {
+            %> <a href="<%= child.hier %>"><%= child.name %></a> <%
+        }
+
+        if (child.pages) {
+            dive(child);
+        }
+    });
+}
+%>
+
+<nav class="main-nav">
+    <div class="main-nav-container">
+        <% dive(siteMap); %>
+    </div>
+</nav>
+    
