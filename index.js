@@ -1,9 +1,13 @@
+const https = require('https');
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const marked = require("marked");
 const fs = require("fs");
-const utils = require("./app/js/utils")
+
+require("@dotenvx/dotenvx").config();
+
+const utils = require("./app/js/utils");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -59,5 +63,17 @@ app.get('*', (req, res) => {
 });
 
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
-module.exports = app.listen(3000);
-console.log("Server is listening on port 3000");
+
+if (process.env.USING_HTTPS) {
+  const httpsOptions = {
+    cert: fs.readFileSync(process.env.CERT_FILE),
+    key: fs.readFileSync(process.env.KEY_FILE)
+  };
+
+  console.log(httpsOptions);
+
+  https.createServer(httpsOptions, app).listen(process.env.HTTPS_PORT);
+}
+else {
+  app.listen(process.env.HTTP_PORT);
+}
