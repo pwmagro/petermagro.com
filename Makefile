@@ -5,15 +5,19 @@ ifeq ($(OS),Windows_NT)
 else
 	rm -rf node_modules public/css
 endif
+
+
 run:
 	npm install
 	npm run sass
 	npm run start
 
+
 dev:
 	npm install
 	npm run sass
 	npm run dev
+
 
 rebuild:
 	make clean
